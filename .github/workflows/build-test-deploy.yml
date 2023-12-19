@@ -21,6 +21,8 @@ jobs:
           node-version: ${{ inputs.node-version }}
       - run: npm install
       - run: npm run build 
+      - name: Execute custom script
+        run: ./path/to/your/script.sh
   test: 
     needs: build
     runs-on: ubuntu-latest
@@ -36,6 +38,7 @@ jobs:
       - run: npm install
       - run: npm run test
   deploy:
+    if: secrets.ENVIRONMENT == 'production'
     needs: test
 
     permissions:
