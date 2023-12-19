@@ -1,15 +1,24 @@
 name: build-test-deploy
-on: push
+# Changed 'on' to enable this workflow to be called from other workflows
+on:
+  workflow_call:
+    # Introduced 'inputs' to define parameters that can be passed when calling this workflow
+    inputs:
+      node-version:
+        description: "Node version"
+        required: true
+        type: string
 jobs: 
   build:
     runs-on: ubuntu-latest
     steps: 
       - name: checkout repo
         uses: actions/checkout@v3
+      # Modified to use the node-version from the workflow inputs
       - name: use node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '18.x'
+          node-version: ${{ inputs.node-version }}
       - run: npm install
       - run: npm run build 
   test: 
@@ -18,12 +27,14 @@ jobs:
     steps: 
       - name: checkout repo
         uses: actions/checkout@v3
+      # Modified to use the node-version from the workflow inputs
       - name: use node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '18.x'
+          node-version: ${{ inputs.node-version }}
+          
       - run: npm install
-      - run: npm test
+      - run: npm run test
   deploy:
     needs: test
 
@@ -65,3 +76,24 @@ jobs:
       - name: deploy
         id: deployment
         uses: actions/deploy-pages@v1
+#  -----------------------------------------------------------------------------
+# 
+# we will utilize build-test-deploy in a workflow located in a separate repository:
+# name: build-test-deploy
+# # Changed 'on' to enable this workflow to be called from other workflows
+# on:
+#   workflow_call:
+#     # Introduced 'inputs' to define parameters that can be passed when calling this workflow
+#     inputs:
+#       node-version:
+#         description: "Node version"
+#         required: true
+#         type: string
+# 
+#       jobs:
+# my-job:
+#   # Importing a reusable workflow from another repository and branch
+#   uses: organization/repo/.github/workflows/build-test-deploy.yml@main
+#   # Passing 'node-version' as an input parameter to the reusable workflow
+#   with:
+#     node-version: '18.x'
