@@ -1,8 +1,21 @@
 name: 'Hello World JS Action'
+# Changed 'on' to enable this workflow to be called from other workflows
 on:
-  push:
-    branches:
-      - main
+  workflow_call:
+    # Introduced 'inputs' to define parameters that can be passed when calling this workflow
+    inputs:
+      node-version:
+        description: "Node version"
+        required: true
+        type: string
+
+      jobs:
+my-job:
+  # Importing a reusable workflow from another repository and branch
+  uses: organization/repo/.github/workflows/build-test-deploy.yml@main
+  # Passing 'node-version' as an input parameter to the reusable workflow
+  with:
+    node-version: '18.x'
 
 jobs:
   greet:
