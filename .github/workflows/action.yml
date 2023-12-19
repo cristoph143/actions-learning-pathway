@@ -1,0 +1,25 @@
+name: 'Hello World JS Action'
+permissions: 'Greet someone and record the time'
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  greet:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '16'
+
+    - name: Run Hello World JS Action
+      run: node index.js
+      env:
+        WHO_TO_GREET: ${{ inputs.who-to-greet }}
