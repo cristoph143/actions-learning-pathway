@@ -76,6 +76,10 @@ jobs:
       - name: deploy
         id: deployment
         uses: actions/deploy-pages@v1
+    strategy:
+      matrix:
+        version: [10, 12, 14]
+        os: [ubuntu-latest, windows-latest]
 #  -----------------------------------------------------------------------------
 # 
 # we will utilize build-test-deploy in a workflow located in a separate repository:
