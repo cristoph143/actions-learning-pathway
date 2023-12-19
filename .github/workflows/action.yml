@@ -1,6 +1,4 @@
 name: 'Hello World JS Action'
-permissions: 'Greet someone and record the time'
-
 on:
   push:
     branches:
